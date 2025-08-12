@@ -1,29 +1,53 @@
 package com.transaction_processor.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
-@Entity
-@Table(name = "transacao")
-public class Transacao {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
-    private Integer tipo;
-    private Date data;
-    private BigDecimal valor;
-    private Long cpf;
-    private String cartao;
-    private Time hora;
-    private String donoDaLoja;
-    private String nomeDaLoj;
 
-    public Long getId() {
-        return id;
+public record Transacao (
+
+        Long id,
+     Integer tipo,
+     Date data,
+     BigDecimal valor,
+     Long cpf,
+     String cartao,
+     Time hora,
+     String donoDaLoja,
+     String nomeDaLoja
+){
+
+    public Transacao withValor(BigDecimal valor){
+        return new Transacao(
+                this.id, this.tipo, this.data, valor,
+                this.cpf, this.cartao, this.hora, this.donoDaLoja, this.nomeDaLoja
+        );
+    }
+
+    public Transacao withData(String data) throws ParseException {
+        var dateFormat = new SimpleDateFormat(("yyyyMMdd"));
+        var date = dateFormat.parse(data) ;
+        return new Transacao(
+                this.id, this.tipo, new Date(date.getTime()), this.valor,
+                this.cpf, this.cartao, this.hora, this.donoDaLoja,
+                this.nomeDaLoja
+        );
+    }
+
+    public Transacao withHora(String hora) throws ParseException {
+        var timeFormat = new SimpleDateFormat(("HHmmss"));
+        var time = timeFormat.parse(hora);
+        return new Transacao(
+                this.id, this.tipo, this.data, this.valor,
+                this.cpf, this.cartao, new Time(time.getTime()),
+                this.donoDaLoja, this.nomeDaLoja
+        );
     }
 
 }
