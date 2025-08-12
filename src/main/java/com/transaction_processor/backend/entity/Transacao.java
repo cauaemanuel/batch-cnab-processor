@@ -23,13 +23,6 @@ public record Transacao (
      String nomeDaLoja
 ){
 
-    public Transacao withValor(BigDecimal valor){
-        return new Transacao(
-                this.id, this.tipo, this.data, valor,
-                this.cpf, this.cartao, this.hora, this.donoDaLoja, this.nomeDaLoja
-        );
-    }
-
     public Transacao withData(String data) throws ParseException {
         var dateFormat = new SimpleDateFormat(("yyyyMMdd"));
         var date = dateFormat.parse(data) ;
