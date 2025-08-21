@@ -1,7 +1,8 @@
 package com.transaction_processor.backend.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -12,15 +13,15 @@ import java.text.SimpleDateFormat;
 
 public record Transacao (
 
-        Long id,
+        @Id Long id,
      Integer tipo,
      Date data,
      BigDecimal valor,
      Long cpf,
      String cartao,
      Time hora,
-     String donoDaLoja,
-     String nomeDaLoja
+     @Column("DONO_LOJA") String donoDaLoja,
+     @Column("NOME_LOJA") String nomeDaLoja
 ){
 
     public Transacao withData(String data) throws ParseException {

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -38,9 +39,8 @@ public class CnabService {
     }
 
     public void uploadCnab(MultipartFile file) throws Exception {
-        var fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        var fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         var targetLocation = fileStorageLocation.resolve(fileName);
-        log.info("Temp directory being used: {}", System.getProperty("java.io.tmpdir"));
         file.transferTo(targetLocation);
 
         var jobParameters = new JobParametersBuilder()
@@ -49,7 +49,8 @@ public class CnabService {
                         true)
                 .addJobParameter("cnabFile",
                         "file:" + targetLocation.toString(),
-                        String.class)
+                        String.class,
+                        false)
                 .toJobParameters();
 
         jobLauncher.run(job, jobParameters);
